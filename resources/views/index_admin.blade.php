@@ -11,7 +11,10 @@
 @section('content')
 
 @foreach ($vehicles as $vehicle)
-    <p>This is user {{ $vehicle }}</p>
+    <div>
+        <p>{{ $vehicle }}</p>
+
+    </div>
 @endforeach
     <list-car-component></list-car-component'>
 @stop

@@ -32,7 +32,7 @@ class AdminController extends Controller
     {
         $vehicle = Veiculo::all();
 
-        return view('index_admin',['veiculos'=>$vehicle]);
+        return view('index_admin',['vehicles'=>$vehicle]);
     }
 
     public function show_create(){
@@ -97,8 +97,10 @@ class AdminController extends Controller
         dd($vehicle);
     }
 
-    public function destroyer($id)
+    public function delete(Request $request)
     {
-        return ['key1'=>'valor1','key2'=>'valor2'];
+        Veiculo::where('id',$request->id)-delete();
+
+        return response('veiculo removido');
     }
 }

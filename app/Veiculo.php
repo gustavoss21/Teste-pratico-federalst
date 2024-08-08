@@ -2,12 +2,17 @@
 
 namespace App;
 
+
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\User;
 
 class Veiculo extends Model
 {
+    use SoftDeletes;
+
+
     protected $table = 'vehicle';
     protected $fillable = [
         'plate',

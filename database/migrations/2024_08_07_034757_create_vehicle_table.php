@@ -24,6 +24,7 @@ class CreateVehicleTable extends Migration
             $table->year('last_maintenance')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->softDeletes();
         });
     }
 
