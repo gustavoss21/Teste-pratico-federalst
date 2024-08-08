@@ -17,14 +17,15 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+
 Route::get('/home', function(Request $request){
     return view('index');
-})->name('home')->middleware('api');
+})->name('home');
 
 Route::group(['prefix'=>'admin', 'as'=>'admin.'], function () {
     // Authentication Rotes
     $this->get('login', 'Auth\LoginController@showLoginForm')->name('login');
-    $this::middleware('generate_token')->post('login', 'Auth\LoginController@login');
+    $this::post('login', 'Auth\LoginController@login');
     $this->post('logout', 'Auth\LoginController@logout')->name('logout');
 
     //Password Reset
@@ -33,5 +34,5 @@ Route::group(['prefix'=>'admin', 'as'=>'admin.'], function () {
     $this->get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
     $this->post('password/reset', 'Auth\ResetPasswordController@reset');
 
-    Route::get('/home', 'UserDefaultController@index')->name('home')->middleware('api');
+    Route::get('/home', 'UserDefaultController@index')->name('home');
 });
