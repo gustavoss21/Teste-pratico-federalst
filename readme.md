@@ -10,41 +10,8 @@
 * Execute php artisan key:generate
 * Execute php artisan migrate
 * Execute php artisan db:seed
-
-Esse é o teste prático - Federal Soluções Técnicas.
-`Laravel 5.6` 
-# Objetivos
-  - Conhecer as habilidades em:
-    - Programação PHP/Laravel (Conhecimentos básicos sobre Laravel)
-    - Conhecimentos com PostgreSql
-    - Organização (código/arquivos)
-    - Controle de versão (Git)
-    - Análise/Entendimento de requisitos
-    - Capacidade de cumprir prazos
-    - Determinação na busca novos conhecimentos
-
-# Atenção
-  - Tudo que for desenvolvido nesse teste não será comercializado ou utilizado comercialmente pela Federal ST ou algum de seus associados.
-  - A única intenção é avaliar o conhecimento atual do candidato.
-
-# Aplicação
-Você deverá desenvolver uma simples aplicação, com login e nível de acesso simples.
-
-O administrador do sistema deverá realizar a manutenção dos veículos. Os dados para a tabela de veículos são:
- - Placa
- - Renavam
- - Modelo
- - Marca
- - Ano
- - Proprietário
  
-Todas as vezes que um veículo for cadastrado ou editado, deverá ser enviado um e-mail para o proprietário.
 
-O e-mail do proprietário deverá ser buscado na tabela de usuários.
-
-O CRUD do veículo deverá ficar em uma área de administração. O proprietário não poderá ter acesso a essa área.
-
-Deverá haver uma área destinada ao proprietário. O proprietário deverá ser capaz de visualizar todos os seus veículos. Ele não pode editar, excluir ou cadastrar novos veículos, apenas visualizar.
 
 ### Usuários
 Existem dois tipos diferentes de usuários na aplicação:
