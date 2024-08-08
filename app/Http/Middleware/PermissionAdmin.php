@@ -18,6 +18,7 @@ class PermissionAdmin
      */
     public function handle($request, Closure $next, $guard = null)
     {
+        
         if(Auth::user()->role != User::ROLE_ADMIN) {
 
             return redirect( '/home');

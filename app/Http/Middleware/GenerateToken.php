@@ -15,6 +15,15 @@ class GenerateToken
      */
     public function handle($request, Closure $next)
     {
+        // if($request->isMethod('post')){
+        //     if($request->path() == 'login'){
+        //         $credencias = $request->all(['email','password']);
+        //         $token = auth('api')->attempt($credencias);
+        //         setcookie("token", $token);
+        //         // dd($token);
+        //     }
+        // }
+
         return $next($request);
 
     }

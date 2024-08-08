@@ -51,6 +51,19 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
+                //         $credencias = $request->all(['email','password']);
+        //         $token = auth('api')->attempt($credencias);
+        //         setcookie("token", $token);
+        $credencias = $request->all(['email','password']);
+
+        $token = Auth('api')->attempt($credencias);
+        if($token){
+            dd(Auth::user());//Auth::user()->role != User::ROLE_ADMIN
+            return response()->json(['token'=>$token]);
+        }else{
+            return response()->json(['token'=>$token]);
+        }
+
         $this->validateLogin($request);
 
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
@@ -70,23 +83,20 @@ class LoginController extends Controller
         // to login and redirect the user back to the login form. Of course, when this
         // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
-
-               
-        $credencias = $request->all(['email','password']);
-        $token = auth('api')->attempt($credencias);
-        setcookie("token", $token);
          
         return $this->sendFailedLoginResponse($request);
     }
 
     public function logout(Request $request)
     {
-        $this->guard()->logout();
-
-        $request->session()->invalidate();
-
+        Auth('api')->logout();
         return redirect($request->is('admin/*') ? '/admin/login' : '/login');
 
+    }
+
+    public function refresh(){
+        $token = Auth('api')->refresh();
+        return response()->json(Auth()->user());
     }
 
 }
