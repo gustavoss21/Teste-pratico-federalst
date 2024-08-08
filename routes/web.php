@@ -18,9 +18,9 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', function(Request $request){
-    return view('index');
-})->name('home');
+// Route::get('/home', function(Request $request){
+//     return view('index');
+// })->name('home');
 
 Route::group(['prefix'=>'admin', 'as'=>'admin.'], function () {
     // Authentication Rotes
@@ -34,5 +34,10 @@ Route::group(['prefix'=>'admin', 'as'=>'admin.'], function () {
     $this->get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
     $this->post('password/reset', 'Auth\ResetPasswordController@reset');
 
-    Route::get('/home', 'UserDefaultController@index')->name('home');
+    Route::get('/home', 'AdminController@index')->name('veiculo.index');
+    Route::get('/home/veiculo/adicionar', 'AdminController@show_create')->name('veiculo.show_create');
+    Route::post('/home/veiculo/adicionar', 'AdminController@create')->name('veiculo.create');
+    Route::get('/home/veiculo', 'AdminController@show')->name('veiculo.show');
+    Route::get('/home/veiculo/update/{veiculo}', 'AdminController@show_update')->name('veiculo.show_update');
+    Route::put('/home/veiculo/update', 'AdminController@update')->name('veiculo.update');
 });

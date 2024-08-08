@@ -17,6 +17,7 @@ class UserDefaultController extends Controller
     {
         // User::find(23)->veiculo;
         dd(Auth::id());
+        dd(User::find(Auth::id())->veiculo);
         return ['tes'=>'valor'];
     }
 }

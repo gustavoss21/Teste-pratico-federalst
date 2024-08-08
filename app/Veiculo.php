@@ -15,7 +15,9 @@ class Veiculo extends Model
         'model',
         'brand',
         'year',
-        'owner'
+        'owner',
+        'user_id'
+
     ];
 
     public function users():belongsTo
