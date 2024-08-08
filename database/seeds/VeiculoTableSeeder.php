@@ -12,7 +12,7 @@ class VeiculoTableSeeder extends Seeder
     public function run()
     {
        
-       factory(App\Veiculo::class, 20)->create();
+       factory(App\Veiculo::class, 50)->create();
         
     }
 }

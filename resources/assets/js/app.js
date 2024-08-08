@@ -6,6 +6,10 @@
  */
 
 require('./bootstrap');
+import example_component from './components/ExampleComponent.vue';
+import ListCarComponente from './components/ListCarComponente.vue';
+import CarComponente from './components/CarComponente.vue';
+import LoginComponente from './components/LoginComponente.vue';
 
 window.Vue = require('vue');
 
@@ -15,7 +19,13 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
+Vue.component('example-component', example_component);
+Vue.component('list-car-component', ListCarComponente);
+Vue.component('car-component', CarComponente);
+Vue.component('login-component', LoginComponente);
+
+
+console.log('111111111111111')
 
 const app = new Vue({
     el: '#app'

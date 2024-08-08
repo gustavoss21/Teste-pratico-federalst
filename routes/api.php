@@ -13,6 +13,11 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('generate_token','auth:api')->get('/user', function (Request $request) {
+    // return $request->user();
+});
+
+
+Route::prefix("/veiculo")->middleware(['jwt.auth'])->group(function() {
+    Route::get('/','UserDefaultController@index');
 });

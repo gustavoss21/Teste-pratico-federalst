@@ -35,4 +35,14 @@ class AdminController extends Controller
     {
         //
     }
+
+    public function show()
+    {
+        return ['key1'=>'valor1','key2'=>'valor2'];
+    }
+
+    public function destroyer()
+    {
+        return ['key1'=>'valor1','key2'=>'valor2'];
+    }
 }
