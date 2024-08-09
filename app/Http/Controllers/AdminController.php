@@ -21,7 +21,6 @@ class AdminController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware([]);
     }
 
     /**
@@ -100,8 +99,7 @@ class AdminController extends Controller
 
     public function delete(Request $request)
     {
-        Veiculo::where('id',$request->id)-delete();
-
+        Veiculo::where('id',$request->id)->delete();
         return response('veiculo removido');
     }
 }

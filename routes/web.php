@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Http\Request;
 use App\Http\Middleware\GenerateToken;
+use App\Http\Middleware\PermissionAdmin;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,6 +22,7 @@ Auth::routes();
 // Route::get('/home', function(Request $request){
 //     return view('index');
 // })->name('home');
+Route::middleware('auth')->get('/home','UserDefaultController@index')->name('home');
 
 Route::group(['prefix'=>'admin', 'as'=>'admin.'], function () {
         // Authentication Rotes
@@ -34,7 +36,7 @@ Route::group(['prefix'=>'admin', 'as'=>'admin.'], function () {
         $this->get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
         $this->post('password/reset', 'Auth\ResetPasswordController@reset');
 
-        Route::group(['middleware' => Middleware\PermissionAdmin::class], function(){
+        Route::group(['middleware' => PermissionAdmin::class], function(){
                     // CRUD
             Route::get('/home', 'AdminController@index')->name('veiculo.index');
             Route::get('/home/veiculo/adicionar', 'AdminController@show_create')->name('veiculo.show_create');
