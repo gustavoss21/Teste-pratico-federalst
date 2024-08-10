@@ -10,7 +10,7 @@
  
 @section('content')
 
-<form action="{{Route('admin.veiculo.update')}}" method="POST">
+<form action="{{Route('admin.veiculo.update',$vehicle->id)}}" method="POST">
         @if($errors->any())
         <h4>{{$errors->first()}}</h4>
         @endif

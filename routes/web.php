@@ -41,9 +41,9 @@ Route::group(['prefix'=>'admin', 'as'=>'admin.'], function () {
             Route::get('/home', 'AdminController@index')->name('veiculo.index');
             Route::get('/home/veiculo/adicionar', 'AdminController@show_create')->name('veiculo.show_create');
             Route::post('/home/veiculo/adicionar', 'AdminController@create')->name('veiculo.create');
-            Route::get('/home/veiculo', 'AdminController@show')->name('veiculo.show');
+            Route::get('/home/veiculo/{veiculo}', 'AdminController@show')->name('veiculo.show');
             Route::get('/home/veiculo/update/{veiculo}', 'AdminController@show_update')->name('veiculo.show_update');
-            Route::put('/home/veiculo/update', 'AdminController@update')->name('veiculo.update');
+            Route::put('/home/veiculo/update/{veiculo}', 'AdminController@update')->name('veiculo.update');
             Route::get('/home/veiculo/delete/{id}', 'AdminController@delete')->name('veiculo.delete');
         });
     }

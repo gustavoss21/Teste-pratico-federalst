@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Validator;
 use App\User;
 use App\Veiculo;
+use  App\Services\ValidationVehicle;
 
 class AdminController extends Controller
 {
@@ -43,33 +44,16 @@ class AdminController extends Controller
         $inputs = $request->all(
             ['plate','model','brand','year','user_id']
         );
-        $rules = [
-            'plate' => 'required|unique:vehicle',
-            'model' => 'required',
-            'brand' => 'required',
-            'year' => 'required|date_format:Y',
-            'user_id' => 'exists:users,id',
-        ];
-        $messages = [
-            'required' => 'The :attribute field is required.',
-        ];
-         
-        $validator = Validator::make(
-            $inputs,
-            $rules,
-            $messages
-        );
-
         
+        $validator = ValidationVehicle::validate($inputs);
+
         if ($validator->fails()) {
-            // dd($validator);
+
             return redirect('/admin/home/veiculo/adicionar')
                         ->withErrors($validator)
                         ->withInput();
         }
-        // Veiculo::create($inputs);
 
-        // return redirect('/admin/home/veiculo');
         return \Redirect::route('admin.veiculo.show', $inputs);
     }
 
@@ -80,21 +64,22 @@ class AdminController extends Controller
         return view('update',["vehicle" => $v]);
     }
 
-    public function update(Veiculo $vehicle,Request $request)
+    public function update($vehicle,Request $request)
     {
-        $vehicle->first()->model = 'vallloror';
-        $v = $vehicle::find(1);
-        $v->update($request->all());
-        dd($request->all());
-
+        // $v = $vehicle::find(1);
+        // dd($vehicle);
+        Veiculo::find($vehicle)->update($request->all());
+        return redirect()->route('admin.veiculo.show',$vehicle);
         // $vehicle->update($request->all())->save();
         // Veiculo::whereId($id)->update($request->all());
 
     }
 
-    public function show(Veiculo $vehicle,Request $request)
+    public function show($vehicle,Request $request)
     {
-        dd($vehicle);
+
+        // dd(get_class_methods(Veiculo::find($vehicle)->first()));
+        dd(Veiculo::find($vehicle)->first()->toArray());
     }
 
     public function delete(Request $request)
