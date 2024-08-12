@@ -69,7 +69,7 @@
     <main class="py-4">
         <div style="color: red">
             {{$message ?? ''}}
-            {{$_REQUEST['message']}}
+            {{$_REQUEST['message'] ?? ''}}
         </div>
         @yield('content')
     </main>

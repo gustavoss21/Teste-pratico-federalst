@@ -4,7 +4,7 @@ namespace App\Services;
 use Validator;
 
 class ValidationVehicle{
-    const rules = [
+    private const rules = [
         'plate' => 'required|unique:vehicle',
         'model' => 'required',
         'brand' => 'required',
@@ -12,21 +12,30 @@ class ValidationVehicle{
         'user_id' => 'exists:users,id',
     ];
 
-    const messages = [
+    private const messages = [
         'model.required' => 'Informar um modelo.',
         'brand.required' => 'O .',
         'plate.unique' => 'A placa do veiculo já esta cadastrada.',
     ];
      
-    static public function validate(array $inputs){
+    static public function validate(array $inputs,$rules_remove=[]){
+
+        $rules = self::rulesCustom($rules_remove);
         $validator = Validator::make(
             $inputs,
-            self::rules,
+            $rules,
             self::messages
         );
         // dd([$validator->fails(),$validator->invalid(),$validator->failed(),$validator->errors()]);
         // dd(get_class_methods($validator));
         return $validator;
+    }
+
+    static public function rulesCustom($rule_remove){
+        // $rules_update = array_intersect_key(self::rules,$inputs);
+        // $inputs_intercection = array_intersect_key($inputs,self::rules);
+    
+        return array_diff_key(self::rules,$rule_remove);;
     }
 
 }

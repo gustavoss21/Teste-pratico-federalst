@@ -78,18 +78,36 @@ class AdminController extends Controller
         return view('update',["vehicle" => $v]);
     }
 
-    public function update($vehicle,Request $request)
+    public function update($vehicle_id,Request $request)
     {
 
-        // Veiculo::find($vehicle)->update($request->all());
-        $teste = Veiculo::find($vehicle);
-        dd($teste);
+        $vehicle = Veiculo::find($vehicle_id);
+        $inputs = $request->all(
+            ['plate','model','brand','year','user_id']
+        );
+
+        if(! $vehicle){
+            return redirect()->route('admin.veiculo.index',['message'=>'O veiculo que deseja atualizar não existe']);
+        }
+
+        $validator = ValidationVehicle::validate($inputs,['plate'=>'']);
+
+        if ($validator->fails()) {
+
+            return redirect()
+                        ->route('admin.veiculo.update',$vehicle_id)
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+
+        $vehicle->update($inputs);
+
         SendMailUser::send(
             $request->get('user_id'),
             SendMailUser::MessageOption['update']
         );
 
-        return redirect()->route('admin.veiculo.show',$vehicle);
+        return redirect()->route('admin.veiculo.show',$vehicle_id);
         // $vehicle->update($request->all())->save();
         // Veiculo::whereId($id)->update($request->all());
 
@@ -102,15 +120,19 @@ class AdminController extends Controller
         dd(Veiculo::find($vehicle)->first()->toArray());
     }
 
-    public function delete(Request $request)
+    public function delete($vehicle_id, Request $request)
     {
-        Veiculo::where('id',$request->id)->delete();
+        $vehicle = Veiculo::find($vehicle_id);
+
+        if(!$vehicle)return redirect()->route('veiculo.index',['message'=>'O veiculo não foi removido porque não existia']);
+
+        $vehicle->delete();
 
         SendMailUser::send(
             $request->get('user_id'),
             SendMailUser::MessageOption['delete']
         );
 
-        return response('veiculo removido');
+        return redirect()->route('veiculo.index');;
     }
 }
