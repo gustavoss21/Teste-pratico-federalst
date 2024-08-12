@@ -8,12 +8,14 @@ class ValidationVehicle{
         'plate' => 'required|unique:vehicle',
         'model' => 'required',
         'brand' => 'required',
-        'year' => 'required|date_format:Y',
+        'year' => 'date_format:Y',
         'user_id' => 'exists:users,id',
     ];
 
     const messages = [
-        'required' => 'The :attribute field is required.',
+        'model.required' => 'Informar um modelo.',
+        'brand.required' => 'O .',
+        'plate.unique' => 'A placa do veiculo já esta cadastrada.',
     ];
      
     static public function validate(array $inputs){
@@ -22,7 +24,8 @@ class ValidationVehicle{
             self::rules,
             self::messages
         );
-
+        // dd([$validator->fails(),$validator->invalid(),$validator->failed(),$validator->errors()]);
+        // dd(get_class_methods($validator));
         return $validator;
     }
 

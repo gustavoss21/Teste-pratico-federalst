@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\DB;
 use Validator;
 use App\User;
 use App\Veiculo;
-use  App\Services\ValidationVehicle;
+use App\Services\ValidationVehicle;
+use App\Services\SendMailUser;
 
 class AdminController extends Controller
 {
@@ -44,7 +45,7 @@ class AdminController extends Controller
         $inputs = $request->all(
             ['plate','model','brand','year','user_id']
         );
-        
+    
         $validator = ValidationVehicle::validate($inputs);
 
         if ($validator->fails()) {
@@ -54,7 +55,15 @@ class AdminController extends Controller
                         ->withInput();
         }
 
-        return \Redirect::route('admin.veiculo.show', $inputs);
+        $vehicle->fill($inputs);
+        $vehicle->save();
+
+        SendMailUser::send(
+            $request->get('user_id'),
+            SendMailUser::MessageOption['create']
+        );
+
+        return \Redirect::route('admin.veiculo.show',$vehicle->id);
     }
 
     public function show_update($vehicle_id,Request $request)
@@ -66,9 +75,13 @@ class AdminController extends Controller
 
     public function update($vehicle,Request $request)
     {
-        // $v = $vehicle::find(1);
-        // dd($vehicle);
-        Veiculo::find($vehicle)->update($request->all());
+
+        // Veiculo::find($vehicle)->update($request->all());
+        SendMailUser::send(
+            $request->get('user_id'),
+            SendMailUser::MessageOption['update']
+        );
+
         return redirect()->route('admin.veiculo.show',$vehicle);
         // $vehicle->update($request->all())->save();
         // Veiculo::whereId($id)->update($request->all());
@@ -85,6 +98,12 @@ class AdminController extends Controller
     public function delete(Request $request)
     {
         Veiculo::where('id',$request->id)->delete();
+
+        SendMailUser::send(
+            $request->get('user_id'),
+            SendMailUser::MessageOption['delete']
+        );
+
         return response('veiculo removido');
     }
 }
