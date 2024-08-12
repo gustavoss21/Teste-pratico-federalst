@@ -68,6 +68,11 @@ class AdminController extends Controller
 
     public function show_update($vehicle_id,Request $request)
     {
+        $vehicle = Veiculo::find($vehicle_id);
+        if(! $vehicle){
+            return redirect()->route('admin.veiculo.index',['message'=>'O veiculo que deseja atualizar não existe']);
+        }
+
         $v = Veiculo::where('id',$vehicle_id)->first();
 
         return view('update',["vehicle" => $v]);
@@ -77,6 +82,8 @@ class AdminController extends Controller
     {
 
         // Veiculo::find($vehicle)->update($request->all());
+        $teste = Veiculo::find($vehicle);
+        dd($teste);
         SendMailUser::send(
             $request->get('user_id'),
             SendMailUser::MessageOption['update']

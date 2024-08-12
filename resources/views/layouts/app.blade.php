@@ -68,6 +68,11 @@
         </nav>
 
         <main class="py-4">
+            
+            <div>
+                <{{$message ?? ''}}
+                {{$_REQUEST['message']}}
+            </div>
             @yield('content')
         </main>
     </div>

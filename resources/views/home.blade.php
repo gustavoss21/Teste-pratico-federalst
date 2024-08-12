@@ -9,10 +9,7 @@
 @stop
  
 @section('content')
-{{$message ?? ''}}
-<div>
-    {{$_REQUEST['message']}}
-</div>
+
 @foreach ($vehicles as $vehicle)
     <div>
         <p>{{ $vehicle }}</p>
