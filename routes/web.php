@@ -22,7 +22,10 @@ Auth::routes();
 // Route::get('/home', function(Request $request){
 //     return view('index');
 // })->name('home');
-Route::middleware('auth')->get('/home','UserDefaultController@index')->name('home');
+Route::group(['middleware' => ['auth']],function(){
+    Route::get('/home','UserDefaultController@index')->name('home');
+    Route::get('/get-veiculos','UserDefaultController@getVehicles')->name('getVehicles');
+});
 
 Route::group(['prefix'=>'admin', 'as'=>'admin.'], function () {
         // Authentication Rotes
@@ -38,6 +41,7 @@ Route::group(['prefix'=>'admin', 'as'=>'admin.'], function () {
 
         Route::group(['middleware' => PermissionAdmin::class], function(){
                     // CRUD
+            Route::get('/get-veiculos', 'AdminController@getVehicles')->name('veiculo.getVehicles');
             Route::get('/home', 'AdminController@index')->name('veiculo.index');
             Route::get('/home/veiculo/adicionar', 'AdminController@show_create')->name('veiculo.show_create');
             Route::post('/home/veiculo/adicionar', 'AdminController@create')->name('veiculo.create');

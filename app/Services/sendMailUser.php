@@ -12,13 +12,11 @@ class SendMailUser{
         'delete'=>'você tem um veiculo que foi apagado'
     ];
     
-    static public function send(int $user_id, $message){
-        $user = User::find($user_id);
+    static public function send(User $user, $message){
         $obj = ['name' => $user->name, 'message' => $message];
 
-        Mail::to($user)->send(
+        Mail::send(
             new NotificaClienteMail($obj)
         );
-
     }
 }

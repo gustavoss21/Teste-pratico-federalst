@@ -9,12 +9,5 @@
 @stop
  
 @section('content')
-
-@foreach ($vehicles as $vehicle)
-    <div>
-        <p>{{ $vehicle }}</p>
-
-    </div>
-@endforeach
     <list-car-component></list-car-component'>
 @stop

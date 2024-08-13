@@ -12,6 +12,11 @@ use App\User;
 use App\Veiculo;
 use App\Services\ValidationVehicle;
 use App\Services\SendMailUser;
+use Illuminate\Support\Facades\Cache;
+use App\Mail\NotificaClienteMail;
+use Illuminate\Support\Facades\Mail;
+use App\Jobs\SendReminderEmail;
+
 
 class AdminController extends Controller
 {
@@ -30,11 +35,15 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function getVehicles(){
+        $vehicle = Veiculo::paginate(8);
+
+        return $vehicle;
+    }
+
     public function index()
     {
-        $vehicle = Veiculo::all();
-
-        return view('index_admin',['vehicles'=>$vehicle]);
+        return view('index_admin');
     }
 
     public function show_create(){
@@ -57,6 +66,15 @@ class AdminController extends Controller
 
         $vehicle->fill($inputs);
         $vehicle->save();
+        //DEVE SER DESCOMENTADO EM PRODUÇAO
+        Cache::put(
+            'user'.$inputs['user_id'].'vehicle',
+            [
+                "$vehicle->id"=>User::find(
+                    $inputs['user_id'])->veiculo
+            ],
+            60
+        );
 
         SendMailUser::send(
             $request->get('user_id'),
@@ -81,35 +99,39 @@ class AdminController extends Controller
     public function update($vehicle_id,Request $request)
     {
 
-        $vehicle = Veiculo::find($vehicle_id);
+        $vehicle = Veiculo::findOrFail($vehicle_id);
+
         $inputs = $request->all(
             ['plate','model','brand','year','user_id']
         );
 
-        if(! $vehicle){
-            return redirect()->route('admin.veiculo.index',['message'=>'O veiculo que deseja atualizar não existe']);
-        }
-
         $validator = ValidationVehicle::validate($inputs,['plate'=>'']);
 
         if ($validator->fails()) {
-
             return redirect()
                         ->route('admin.veiculo.update',$vehicle_id)
-                        ->withErrors($validator)
-                        ->withInput();
+                        ->withErrors($validator);
+                        // ->withInput();
         }
 
-        $vehicle->update($inputs);
+        $vehicle->updateOrCreate($inputs);
 
-        SendMailUser::send(
-            $request->get('user_id'),
-            SendMailUser::MessageOption['update']
+        $user = User::find($inputs['user_id']);
+
+        Cache::put(
+            'user'.$inputs['user_id'].'vehicle',
+            $user->veiculo,
+            60
         );
 
+        SendReminderEmail::dispatch($user)->delay(now()->addSeconds(15));
+
+        // SendMailUser::send(
+        //     $request->get('user_id'),
+        //     SendMailUser::MessageOption['update']
+        // );
+
         return redirect()->route('admin.veiculo.show',$vehicle_id);
-        // $vehicle->update($request->all())->save();
-        // Veiculo::whereId($id)->update($request->all());
 
     }
 

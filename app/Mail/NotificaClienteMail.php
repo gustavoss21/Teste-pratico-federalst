@@ -7,14 +7,15 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
+
 class NotificaClienteMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    protected $object;
+    protected $data;
 
-    public function __construct($object) {
-        $this->object = $object;
+    public function __construct($data) {
+        $this->data = $data;
     }
 
     /**
@@ -30,12 +31,12 @@ class NotificaClienteMail extends Mailable
      */
     public function build()
     {
-        return $this->view('mail')
-        ->with([
-            'name' => $this->object['name'],
-            'messages'=> $this->object['message']
-        ])
-        ->subject('informações de atividade');
+        return $this::view('mail')
+                ->with([
+                    'name' => $this->data['name'],
+                    'messages'=> $this->data['message']
+                ])
+                ->subject('informações de atividade');
                     
     }
 }

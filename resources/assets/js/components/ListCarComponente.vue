@@ -1,47 +1,60 @@
 <template>
-    <div class="container">
-        <h1></h1>
+    <div class="content" style="margin-left:5%;">
+        
+    <h1>sua lista de carro</h1>
+    <h1 v-bind="message_atribute" id="message">{{ message }}</h1>
+
+    <div class="" style="display: flex; flex-wrap: wrap;">
+    <div class="conten-vehicle" style="padding: 10px; flex: 0 0 400px; margin-bottom: 20px;" v-for="vehicle in vehicles" :key="vehicle.id">
+        <car-component :vehicle="vehicle"></car-component>
     </div>
+    </div>
+    </div>
+    
 </template>
 
 <script>
     export default {
         data(){
             return {
-                urlBasy:window.location.origin
-            }
+                urlBasy:window.location.origin,
+                vehicles:[],
+                'message_atribute':{'style':{'display':'none','color':'red'}},
+                'message':'',
+                }
+            
         },
         methods:{
-            get_list_car(){
-                let href = this.urlBasy + '/api/veiculo'
-                console.log([])
-                axios.get(href,{
-                    headers: {
-                        'Authorization': 'Bearer ' + this.getCookie('token')
-                    }}
-                )
-                
-                //     .then(
-                //         response => {
-                //             console.log(response)
-                //         }
-                //     )
-                //     .catch(error => {
-                //             this.message_alert('danger','hover um erro inesperado')
-                //             console.log(error)
-                //         }
-                //     )
+            getVehicles(){
+                let href = this.getUrl()
+                axios.get(href)
+                    .then(
+                        response => {
+                            this.vehicles = response.data['data'] ?? response.data                           
+                            console.log(this.vehicles)
+                        }
+                    )
+                    .catch(error => {
+                            console.log(Object.keys(error))
+                            let message_error = error.response.data.message
+                            this.message_atribute.style.display = 'block';
+                            this.message = 'Error: '+ message_error
+
+                        }
+                    )
             },
 
-            getCookie(name) {
-                const value = `; ${document.cookie}`;
-                const parts = value.split(`; ${name}=`);
-                if (parts.length === 2) return parts.pop().split(';').shift();
-            }
+            getUrl(){                
+                if(location.href.search('admin') != -1){
+                    return this.urlBasy + '/admin/get-veiculos'
+                }
+
+                return this.urlBasy + '/get-veiculos'
+            },
         },
         
         mounted() {
-            this.get_list_car()
+            this.getVehicles()
         }
     }
 </script>

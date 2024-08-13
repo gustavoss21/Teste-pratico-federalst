@@ -71,7 +71,7 @@
             
             <div>
                 <{{$message ?? ''}}
-                {{$_REQUEST['message']}}
+                {{$_REQUEST['message'] ?? ''}}
             </div>
             @yield('content')
         </main>
