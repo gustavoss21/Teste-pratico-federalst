@@ -41,14 +41,14 @@ Route::group(['prefix'=>'admin', 'as'=>'admin.'], function () {
 
         Route::group(['middleware' => PermissionAdmin::class], function(){
                     // CRUD
-            Route::get('/get-veiculos', 'AdminController@getVehicles')->name('veiculo.getVehicles');
-            Route::get('/home', 'AdminController@index')->name('veiculo.index');
-            Route::get('/home/veiculo/adicionar', 'AdminController@show_create')->name('veiculo.show_create');
-            Route::post('/home/veiculo/adicionar', 'AdminController@create')->name('veiculo.create');
-            Route::get('/home/veiculo/{veiculo}', 'AdminController@show')->name('veiculo.show');
-            Route::get('/home/veiculo/atualizar/{veiculo}', 'AdminController@show_update')->name('veiculo.show_update');
-            Route::put('/home/veiculo/atualizar/{veiculo}', 'AdminController@update')->name('veiculo.update');
-            Route::get('/home/veiculo/delete/{id}', 'AdminController@delete')->name('veiculo.delete');
+            Route::get('/get-veiculos', 'AdminController@getVehicles')->name('vehicle.getVehicles');
+            Route::get('/home', 'AdminController@index')->name('vehicle.index');
+            Route::get('/home/veiculo/adicionar', 'AdminController@show_create')->name('vehicle.show_create');
+            Route::post('/home/veiculo/adicionar', 'AdminController@create')->name('vehicle.create');
+            Route::get('/home/veiculo/{veiculo}', 'AdminController@show')->name('vehicle.show');
+            Route::get('/home/veiculo/atualizar/{veiculo}', 'AdminController@show_update')->name('vehicle.show_update');
+            Route::put('/home/veiculo/atualizar/{veiculo}', 'AdminController@update')->name('vehicle.update');
+            Route::get('/home/veiculo/delete/{id}', 'AdminController@delete')->name('vehicle.delete');
         });
     }
 );

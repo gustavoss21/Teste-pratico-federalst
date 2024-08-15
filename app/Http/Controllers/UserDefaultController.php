@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Cache;
 
 class UserDefaultController extends Controller
 {
+    public function __construct() {
+        $this->middleware('permission.custom');
+    }
     public function index()
     {
         return view('home');

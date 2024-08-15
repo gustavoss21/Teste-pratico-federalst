@@ -1698,22 +1698,57 @@ module.exports = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['vehicle'],
+  props: ['data'],
   data: function data() {
     return {
-      'fields': [{
-        'ele': {
-          'type': 'h5'
-        }
-      }, {
-        'brand': {
-          'ele': 'h1'
-        }
-      }]
+      url_origin: window.location.origin,
+      vehicles: [],
+      div_parent: {
+        style: "display: flex; flex-wrap: wrap; gap: 20px;"
+      },
+      div_content: {
+        "class": "content-vehicle"
+      },
+      car_ident: {
+        style: "text-align:center; font-size:1.4rem; margin-bottom: 15px"
+      },
+      adjust_child: {}
     };
   },
+  methods: {
+    getVehicles: function getVehicles() {
+      var _this = this;
+      var href = this.getUrl();
+      axios.get(href).then(function (response) {
+        var _response$data$data;
+        _this.vehicles = (_response$data$data = response.data['data']) !== null && _response$data$data !== void 0 ? _response$data$data : response.data;
+        console.log(_this.vehicles);
+      })["catch"](function (error) {
+        console.log(Object.keys(error));
+        var message_error = error.response.data.message;
+        _this.message_atribute.style.display = 'block';
+        _this.message = 'Error: ' + message_error;
+      });
+    },
+    getUrl: function getUrl() {
+      if (location.href.search('admin') != -1) {
+        return this.url_origin + '/admin/get-veiculos';
+      }
+      return this.url_origin + '/get-veiculos';
+    },
+    setStyleTemplate: function setStyleTemplate() {
+      this.div_parent.style = 'font-size:1.2rem';
+      this.div_content["class"] = '';
+      this.adjust_child["class"] = 'adjust-space-childrens';
+      this.car_ident.style = 'font-size: 3rem;margin-bottom: 30px;';
+    }
+  },
   mounted: function mounted() {
-    console.log('Component mounted.');
+    if (this.data) {
+      this.vehicles = [JSON.parse(this.data)];
+      return this.setStyleTemplate();
+    }
+    this.getVehicles();
   }
 });
 
@@ -1748,8 +1783,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      urlBasy: window.location.origin,
-      vehicles: [],
+      url_origin: window.location.origin,
       'message_atribute': {
         'style': {
           'display': 'none',
@@ -1759,31 +1793,8 @@ __webpack_require__.r(__webpack_exports__);
       'message': ''
     };
   },
-  methods: {
-    getVehicles: function getVehicles() {
-      var _this = this;
-      var href = this.getUrl();
-      axios.get(href).then(function (response) {
-        var _response$data$data;
-        _this.vehicles = (_response$data$data = response.data['data']) !== null && _response$data$data !== void 0 ? _response$data$data : response.data;
-        console.log(_this.vehicles);
-      })["catch"](function (error) {
-        console.log(Object.keys(error));
-        var message_error = error.response.data.message;
-        _this.message_atribute.style.display = 'block';
-        _this.message = 'Error: ' + message_error;
-      });
-    },
-    getUrl: function getUrl() {
-      if (location.href.search('admin') != -1) {
-        return this.urlBasy + '/admin/get-veiculos';
-      }
-      return this.urlBasy + '/get-veiculos';
-    }
-  },
-  mounted: function mounted() {
-    this.getVehicles();
-  }
+  methods: {},
+  mounted: function mounted() {}
 });
 
 /***/ }),
@@ -1836,39 +1847,57 @@ __webpack_require__.r(__webpack_exports__);
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "container"
-  }, [_c("div", {}, [_c("div", {
-    attrs: {
-      id: "veiculo-" + _vm.vehicle.id
-    }
-  }, [_c("div", {
-    staticClass: "car-ident",
-    staticStyle: {
-      "font-weight": "bold",
-      "font-size": "1.3rem"
-    }
-  }, [_c("span", [_vm._v(_vm._s(_vm.vehicle.brand))]), _vm._v(" "), _c("span", [_vm._v(_vm._s(_vm.vehicle.model))])]), _vm._v(" "), _c("div", [_c("div", [_c("span", {
-    staticStyle: {
-      "font-weight": "bolder"
-    }
-  }, [_vm._v("id do veiculo:")]), _vm._v(" "), _c("span", [_vm._v(_vm._s(_vm.vehicle.id))])]), _vm._v(" "), _c("div", [_c("span", {
-    staticStyle: {
-      "font-weight": "bolder"
-    }
-  }, [_vm._v("placa:")]), _vm._v(" "), _c("span", [_vm._v(_vm._s(_vm.vehicle.plate))])]), _vm._v(" "), _c("div", [_c("span", {
-    staticStyle: {
-      "font-weight": "bolder"
-    }
-  }, [_vm._v("ano:")]), _vm._v(" "), _c("span", [_vm._v(_vm._s(_vm.vehicle.year))])]), _vm._v(" "), _c("div", [_c("span", {
-    staticStyle: {
-      "font-weight": "bolder"
-    }
-  }, [_vm._v("ultima atualização:")]), _vm._v(" "), _c("span", [_vm._v(_vm._s(_vm.vehicle.updated_at))])]), _vm._v(" "), _c("div", [_c("span", {
-    staticStyle: {
-      "font-weight": "bolder"
-    }
-  }, [_vm._v("proprietario:")]), _vm._v(" "), _c("span", [_vm._v(_vm._s(_vm.vehicle.user_id))])])])])])]);
+  return _c("div", _vm._b({}, "div", _vm.div_parent, false), _vm._l(_vm.vehicles, function (vehicle) {
+    return _c("div", _vm._b({
+      key: vehicle.id
+    }, "div", _vm.div_content, false), [_c("div", {
+      staticClass: "container"
+    }, [_c("div", {}, [_c("div", {
+      attrs: {
+        id: "veiculo-" + vehicle.id
+      }
+    }, [_c("div", _vm._b({}, "div", _vm.car_ident, false), [_c("span", [_vm._v(_vm._s(vehicle.brand))]), _vm._v(" "), _c("span", [_vm._v(_vm._s(vehicle.model))])]), _vm._v(" "), _c("div", _vm._b({}, "div", _vm.adjust_child, false), [_c("div", [_c("span", {
+      staticStyle: {
+        "font-weight": "bolder"
+      }
+    }, [_vm._v("id do veiculo:")]), _vm._v(" "), _c("span", [_vm._v(_vm._s(vehicle.id))])]), _vm._v(" "), _c("div", [_c("span", {
+      staticStyle: {
+        "font-weight": "bolder"
+      }
+    }, [_vm._v("placa:")]), _vm._v(" "), _c("span", [_vm._v(_vm._s(vehicle.plate))])]), _vm._v(" "), _c("div", [_c("span", {
+      staticStyle: {
+        "font-weight": "bolder"
+      }
+    }, [_vm._v("ano:")]), _vm._v(" "), _c("span", [_vm._v(_vm._s(vehicle.year))])]), _vm._v(" "), _c("div", [_c("span", {
+      staticStyle: {
+        "font-weight": "bolder"
+      }
+    }, [_vm._v("ultima atualização:")]), _vm._v(" "), _c("span", [_vm._v(_vm._s(vehicle.updated_at))])]), _vm._v(" "), _c("div", [_c("span", {
+      staticStyle: {
+        "font-weight": "bolder"
+      }
+    }, [_vm._v("proprietario:")]), _vm._v(" "), _c("span", [_vm._v(_vm._s(vehicle.user_id))])]), _vm._v(" "), _c("div", {
+      staticClass: "action-vehicle"
+    }, [_c("div", [_c("a", {
+      attrs: {
+        href: _vm.url_origin + "/admin/home/veiculo/delete/" + vehicle.id
+      }
+    }, [_c("span", {
+      staticClass: "material-symbols-outlined",
+      staticStyle: {
+        color: "red"
+      }
+    }, [_vm._v("delete")])])]), _vm._v(" "), _c("div", [_c("a", {
+      attrs: {
+        href: _vm.url_origin + "/admin/home/veiculo/atualizar/" + vehicle.id
+      }
+    }, [_c("span", {
+      staticClass: "material-symbols-outlined",
+      staticStyle: {
+        color: "blue"
+      }
+    }, [_vm._v("edit")])])])])])])])])]);
+  }), 0);
 };
 var staticRenderFns = [];
 render._withStripped = true;
@@ -1933,30 +1962,30 @@ var render = function render() {
     staticStyle: {
       "margin-left": "5%"
     }
-  }, [_c("h1", [_vm._v("sua lista de carro")]), _vm._v(" "), _c("h1", _vm._b({
+  }, [_c("div", {
+    staticStyle: {
+      display: "flex",
+      "align-items": "center"
+    }
+  }, [_c("h1", {
+    staticStyle: {
+      "margin-right": "5px"
+    }
+  }, [_vm._v("sua lista de carro")]), _vm._v(" "), _c("a", {
+    attrs: {
+      href: _vm.url_origin + "/admin/home/veiculo/adicionar"
+    }
+  }, [_c("span", {
+    staticClass: "material-symbols-outlined",
+    staticStyle: {
+      "font-weight": "600",
+      color: "#e4e403"
+    }
+  }, [_vm._v("add_box")])])]), _vm._v(" "), _c("h1", _vm._b({
     attrs: {
       id: "message"
     }
-  }, "h1", _vm.message_atribute, false), [_vm._v(_vm._s(_vm.message))]), _vm._v(" "), _c("div", {
-    staticStyle: {
-      display: "flex",
-      "flex-wrap": "wrap"
-    }
-  }, _vm._l(_vm.vehicles, function (vehicle) {
-    return _c("div", {
-      key: vehicle.id,
-      staticClass: "conten-vehicle",
-      staticStyle: {
-        padding: "10px",
-        flex: "0 0 400px",
-        "margin-bottom": "20px"
-      }
-    }, [_c("car-component", {
-      attrs: {
-        vehicle: vehicle
-      }
-    })], 1);
-  }), 0)]);
+  }, "h1", _vm.message_atribute, false), [_vm._v(_vm._s(_vm.message))]), _vm._v(" "), _c("div", [_c("car-component")], 1)]);
 };
 var staticRenderFns = [];
 render._withStripped = true;

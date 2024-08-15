@@ -43,7 +43,7 @@ class AdminController extends Controller
 
     public function index()
     {
-        return view('index_admin');
+        return view('indexAdmin');
     }
 
     public function show_create(){
@@ -81,14 +81,14 @@ class AdminController extends Controller
             SendMailUser::MessageOption['create']
         );
 
-        return \Redirect::route('admin.veiculo.show',$vehicle->id);
+        return \Redirect::route('admin.vehicle.show',$vehicle->id);
     }
 
     public function show_update($vehicle_id,Request $request)
     {
         $vehicle = Veiculo::find($vehicle_id);
         if(! $vehicle){
-            return redirect()->route('admin.veiculo.index',['message'=>'O veiculo que deseja atualizar não existe']);
+            return redirect()->route('admin.vehicle.index',['message'=>'O veiculo que deseja atualizar não existe']);
         }
 
         $v = Veiculo::where('id',$vehicle_id)->first();
@@ -109,7 +109,7 @@ class AdminController extends Controller
 
         if ($validator->fails()) {
             return redirect()
-                        ->route('admin.veiculo.update',$vehicle_id)
+                        ->route('admin.vehicle.update',$vehicle_id)
                         ->withErrors($validator);
                         // ->withInput();
         }
@@ -131,30 +131,29 @@ class AdminController extends Controller
         //     SendMailUser::MessageOption['update']
         // );
 
-        return redirect()->route('admin.veiculo.show',$vehicle_id);
+        return redirect()->route('admin.vehicle.show',$vehicle_id);
 
     }
 
-    public function show($vehicle,Request $request)
+    public function show($vehicle_id,Request $request)
     {
 
-        // dd(get_class_methods(Veiculo::find($vehicle)->first()));
-        dd(Veiculo::find($vehicle)->first()->toArray());
+        $vehicle = Veiculo::findOrFail($vehicle_id)->first();
+        return view('showVehicle',['vehicle' => $vehicle]);
     }
 
     public function delete($vehicle_id, Request $request)
     {
-        $vehicle = Veiculo::find($vehicle_id);
 
-        if(!$vehicle)return redirect()->route('veiculo.index',['message'=>'O veiculo não foi removido porque não existia']);
+        $vehicle = Veiculo::findOrFail($vehicle_id);
 
-        $vehicle->delete();
+        // $vehicle->delete();
 
-        SendMailUser::send(
-            $request->get('user_id'),
-            SendMailUser::MessageOption['delete']
-        );
+        // SendMailUser::send(
+        //     $request->get('user_id'),
+        //     SendMailUser::MessageOption['delete']
+        // );
 
-        return redirect()->route('veiculo.index');;
+        return redirect()->route('admin.vehicle.index',['message'=>'O veiculo foi removido com sucesso']);;
     }
 }

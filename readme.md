@@ -21,5 +21,6 @@
 * apagar codigo comentado
 * o no confing\mail tirar o "to" global
 * adicionar "Mail::to()" no SendMailUser
+* method delete comentado
 
 

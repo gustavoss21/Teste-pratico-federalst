@@ -1,0 +1,19 @@
+.content-vehicle{
+    padding: 10px;
+    flex: 0 0 400px;
+    margin-bottom: 20px;
+    border: 1px solid #ff000012;
+    box-shadow: 8px 5px 9px 0px #0000000a;
+}
+
+.action-vehicle{
+    display: flex;
+    margin-top: 10px;
+    gap: 11px;
+    border-top: 1px solid #0000001f;
+    padding-top: 7px;
+}
+
+.adjust-space-childrens > div{
+    padding-bottom: 2%;
+}
