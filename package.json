@@ -20,7 +20,7 @@
         "lodash": "^4.17.13",
         "mustache": "^3.0.3",
         "popper.js": "^1.12",
-        "resolve-url-loader": "^3.1.0",
+        "resolve-url-loader": "^3.1.5",
         "sass": "^1.77.8",
         "sass-loader": "^7.3.1",
         "vue": "^2.5.7",
