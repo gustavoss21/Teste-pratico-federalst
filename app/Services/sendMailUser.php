@@ -15,7 +15,7 @@ class SendMailUser{
     static public function send(User $user, $message){
         $obj = ['name' => $user->name, 'message' => $message];
 
-        Mail::send(
+        Mail::to($user->email)->send(
             new NotificaClienteMail($obj)
         );
     }

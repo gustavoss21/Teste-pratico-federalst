@@ -3,17 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
 use Validator;
 use App\User;
 use App\Veiculo;
 use App\Services\ValidationVehicle;
-use App\Services\SendMailUser;
 use Illuminate\Support\Facades\Cache;
-use App\Mail\NotificaClienteMail;
 use Illuminate\Support\Facades\Mail;
 use App\Jobs\SendReminderEmail;
 
@@ -30,11 +24,6 @@ class AdminController extends Controller
         $this->middleware('auth');
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function getVehicles(){
         $vehicle = Veiculo::paginate(8);
 
@@ -76,48 +65,39 @@ class AdminController extends Controller
             60
         );
 
-        SendMailUser::send(
-            $request->get('user_id'),
-            SendMailUser::MessageOption['create']
-        );
+        SendReminderEmail::dispatch($user)->delay(now()->addSeconds(15));
+
 
         return \Redirect::route('admin.vehicle.show',$vehicle->id);
     }
 
     public function show_update($vehicle_id,Request $request)
     {
-        $vehicle = Veiculo::find($vehicle_id);
-        if(! $vehicle){
-            return redirect()->route('admin.vehicle.index',['message'=>'O veiculo que deseja atualizar não existe']);
-        }
-
-        $v = Veiculo::where('id',$vehicle_id)->first();
-
-        return view('update',["vehicle" => $v]);
+        $vehicle = Veiculo::findOrFail($vehicle_id);
+        return view('update',["vehicle" => $vehicle]);
     }
 
     public function update($vehicle_id,Request $request)
     {
 
         $vehicle = Veiculo::findOrFail($vehicle_id);
-
         $inputs = $request->all(
             ['plate','model','brand','year','user_id']
         );
 
-        $validator = ValidationVehicle::validate($inputs,['plate'=>'']);
+        $validator = ValidationVehicle::validate($inputs,['plate'=>['required','regex:/\d{3}[a-z A-Z]{4}/']]);
 
         if ($validator->fails()) {
             return redirect()
                         ->route('admin.vehicle.update',$vehicle_id)
                         ->withErrors($validator);
-                        // ->withInput();
         }
 
-        $vehicle->updateOrCreate($inputs);
+        $vehicle->update($inputs);
 
         $user = User::find($inputs['user_id']);
 
+        $vehicle_cache = Cache::pull('user'.$inputs['user_id'].'vehicle') ?? [];
         Cache::put(
             'user'.$inputs['user_id'].'vehicle',
             $user->veiculo,
@@ -126,10 +106,6 @@ class AdminController extends Controller
 
         SendReminderEmail::dispatch($user)->delay(now()->addSeconds(15));
 
-        // SendMailUser::send(
-        //     $request->get('user_id'),
-        //     SendMailUser::MessageOption['update']
-        // );
 
         return redirect()->route('admin.vehicle.show',$vehicle_id);
 
@@ -147,12 +123,10 @@ class AdminController extends Controller
 
         $vehicle = Veiculo::findOrFail($vehicle_id);
 
-        // $vehicle->delete();
+        $vehicle->delete();
 
-        // SendMailUser::send(
-        //     $request->get('user_id'),
-        //     SendMailUser::MessageOption['delete']
-        // );
+        SendReminderEmail::dispatch($user)->delay(now()->addSeconds(15));
+
 
         return redirect()->route('admin.vehicle.index',['message'=>'O veiculo foi removido com sucesso']);;
     }

@@ -61,10 +61,10 @@ return [
     ],
 
     //  DEVE SER COMENTADO EM PRODUÇAO
-    'to' => [
-        'address' => 'gtplay.gss25@gmail.com',
-        'name' => 'gustavo'
-    ],
+    // 'to' => [
+    //     'address' => 'emailtomessage@gmail.com',
+    //     'name' => 'nameteste'
+    // ],
 
     /*
     |--------------------------------------------------------------------------
