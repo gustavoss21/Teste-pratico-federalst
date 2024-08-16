@@ -1698,8 +1698,57 @@ module.exports = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['data'],
+  data: function data() {
+    return {
+      url_origin: window.location.origin,
+      vehicles: [],
+      div_parent: {
+        style: "display: flex; flex-wrap: wrap; gap: 20px;"
+      },
+      div_content: {
+        "class": "content-vehicle"
+      },
+      car_ident: {
+        style: "text-align:center; font-size:1.4rem; margin-bottom: 15px"
+      },
+      adjust_child: {}
+    };
+  },
+  methods: {
+    getVehicles: function getVehicles() {
+      var _this = this;
+      var href = this.getUrl();
+      axios.get(href).then(function (response) {
+        var _response$data$data;
+        _this.vehicles = (_response$data$data = response.data['data']) !== null && _response$data$data !== void 0 ? _response$data$data : response.data;
+        console.log(_this.vehicles);
+      })["catch"](function (error) {
+        console.log(Object.keys(error));
+        var message_error = error.response.data.message;
+        _this.message_atribute.style.display = 'block';
+        _this.message = 'Error: ' + message_error;
+      });
+    },
+    getUrl: function getUrl() {
+      if (location.href.search('admin') != -1) {
+        return this.url_origin + '/admin/get-veiculos';
+      }
+      return this.url_origin + '/get-veiculos';
+    },
+    setStyleTemplate: function setStyleTemplate() {
+      this.div_parent.style = 'font-size:1.2rem';
+      this.div_content["class"] = '';
+      this.adjust_child["class"] = 'adjust-space-childrens';
+      this.car_ident.style = 'font-size: 3rem;margin-bottom: 30px;';
+    }
+  },
   mounted: function mounted() {
-    console.log('Component mounted.');
+    if (this.data) {
+      this.vehicles = [JSON.parse(this.data)];
+      return this.setStyleTemplate();
+    }
+    this.getVehicles();
   }
 });
 
@@ -1734,39 +1783,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      urlBasy: window.location.origin
+      url_origin: window.location.origin,
+      'message_atribute': {
+        'style': {
+          'display': 'none',
+          'color': 'red'
+        }
+      },
+      'message': ''
     };
   },
-  methods: {
-    get_list_car: function get_list_car() {
-      var href = this.urlBasy + '/api/veiculo';
-      console.log([]);
-      axios.get(href, {
-        headers: {
-          'Authorization': 'Bearer ' + this.getCookie('token')
-        }
-      });
-
-      //     .then(
-      //         response => {
-      //             console.log(response)
-      //         }
-      //     )
-      //     .catch(error => {
-      //             this.message_alert('danger','hover um erro inesperado')
-      //             console.log(error)
-      //         }
-      //     )
-    },
-    getCookie: function getCookie(name) {
-      var value = "; ".concat(document.cookie);
-      var parts = value.split("; ".concat(name, "="));
-      if (parts.length === 2) return parts.pop().split(';').shift();
-    }
-  },
-  mounted: function mounted() {
-    this.get_list_car();
-  }
+  methods: {},
+  mounted: function mounted() {}
 });
 
 /***/ }),
@@ -1819,25 +1847,59 @@ __webpack_require__.r(__webpack_exports__);
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
-  return _vm._m(0);
+  return _c("div", _vm._b({}, "div", _vm.div_parent, false), _vm._l(_vm.vehicles, function (vehicle) {
+    return _c("div", _vm._b({
+      key: vehicle.id
+    }, "div", _vm.div_content, false), [_c("div", {
+      staticClass: "container"
+    }, [_c("div", {}, [_c("div", {
+      attrs: {
+        id: "veiculo-" + vehicle.id
+      }
+    }, [_c("div", _vm._b({}, "div", _vm.car_ident, false), [_c("span", [_vm._v(_vm._s(vehicle.brand))]), _vm._v(" "), _c("span", [_vm._v(_vm._s(vehicle.model))])]), _vm._v(" "), _c("div", _vm._b({}, "div", _vm.adjust_child, false), [_c("div", [_c("span", {
+      staticStyle: {
+        "font-weight": "bolder"
+      }
+    }, [_vm._v("id do veiculo:")]), _vm._v(" "), _c("span", [_vm._v(_vm._s(vehicle.id))])]), _vm._v(" "), _c("div", [_c("span", {
+      staticStyle: {
+        "font-weight": "bolder"
+      }
+    }, [_vm._v("placa:")]), _vm._v(" "), _c("span", [_vm._v(_vm._s(vehicle.plate))])]), _vm._v(" "), _c("div", [_c("span", {
+      staticStyle: {
+        "font-weight": "bolder"
+      }
+    }, [_vm._v("ano:")]), _vm._v(" "), _c("span", [_vm._v(_vm._s(vehicle.year))])]), _vm._v(" "), _c("div", [_c("span", {
+      staticStyle: {
+        "font-weight": "bolder"
+      }
+    }, [_vm._v("ultima atualização:")]), _vm._v(" "), _c("span", [_vm._v(_vm._s(vehicle.updated_at))])]), _vm._v(" "), _c("div", [_c("span", {
+      staticStyle: {
+        "font-weight": "bolder"
+      }
+    }, [_vm._v("proprietario:")]), _vm._v(" "), _c("span", [_vm._v(_vm._s(vehicle.user_id))])]), _vm._v(" "), _c("div", {
+      staticClass: "action-vehicle"
+    }, [_c("div", [_c("a", {
+      attrs: {
+        href: _vm.url_origin + "/admin/home/veiculo/delete/" + vehicle.id
+      }
+    }, [_c("span", {
+      staticClass: "material-symbols-outlined",
+      staticStyle: {
+        color: "red"
+      }
+    }, [_vm._v("delete")])])]), _vm._v(" "), _c("div", [_c("a", {
+      attrs: {
+        href: _vm.url_origin + "/admin/home/veiculo/atualizar/" + vehicle.id
+      }
+    }, [_c("span", {
+      staticClass: "material-symbols-outlined",
+      staticStyle: {
+        color: "blue"
+      }
+    }, [_vm._v("edit")])])])])])])])])]);
+  }), 0);
 };
-var staticRenderFns = [function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "container"
-  }, [_c("div", {
-    staticClass: "row justify-content-center"
-  }, [_c("div", {
-    staticClass: "col-md-8"
-  }, [_c("div", {
-    staticClass: "card card-default"
-  }, [_c("div", {
-    staticClass: "card-header"
-  }, [_vm._v("Example Component")]), _vm._v(" "), _c("div", {
-    staticClass: "card-body"
-  }, [_vm._v("\n                    I'm an example component.\n                ")])])])])]);
-}];
+var staticRenderFns = [];
 render._withStripped = true;
 
 
@@ -1896,8 +1958,34 @@ var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
-    staticClass: "container"
-  });
+    staticClass: "content",
+    staticStyle: {
+      "margin-left": "5%"
+    }
+  }, [_c("div", {
+    staticStyle: {
+      display: "flex",
+      "align-items": "center"
+    }
+  }, [_c("h1", {
+    staticStyle: {
+      "margin-right": "5px"
+    }
+  }, [_vm._v("sua lista de carro")]), _vm._v(" "), _c("a", {
+    attrs: {
+      href: _vm.url_origin + "/admin/home/veiculo/adicionar"
+    }
+  }, [_c("span", {
+    staticClass: "material-symbols-outlined",
+    staticStyle: {
+      "font-weight": "600",
+      color: "#e4e403"
+    }
+  }, [_vm._v("add_box")])])]), _vm._v(" "), _c("h1", _vm._b({
+    attrs: {
+      id: "message"
+    }
+  }, "h1", _vm.message_atribute, false), [_vm._v(_vm._s(_vm.message))]), _vm._v(" "), _c("div", [_c("car-component")], 1)]);
 };
 var staticRenderFns = [];
 render._withStripped = true;
@@ -49411,7 +49499,6 @@ Vue.component('example-component', _components_ExampleComponent_vue__WEBPACK_IMP
 Vue.component('list-car-component', _components_ListCarComponente_vue__WEBPACK_IMPORTED_MODULE_1__["default"]);
 Vue.component('car-component', _components_CarComponente_vue__WEBPACK_IMPORTED_MODULE_2__["default"]);
 Vue.component('login-component', _components_LoginComponente_vue__WEBPACK_IMPORTED_MODULE_3__["default"]);
-console.log('111111111111111');
 var app = new Vue({
   el: '#app'
 });
@@ -49468,14 +49555,11 @@ if (token) {
  */
 
 // import Echo from 'laravel-echo'
-
-// window.Pusher = require('pusher-js');
+// import Redis from 'ioredis';
 
 // window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: process.env.MIX_PUSHER_APP_KEY,
-//     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-//     encrypted: true
+//     broadcaster: 'socket.io',
+//     host: window.location.hostname + ':6001'
 // });
 
 /***/ }),

@@ -3,6 +3,9 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use App\Http\Middleware\PermissionAdmin;
+use App\Http\Middleware\PermissionCustomer;
+
 
 class Kernel extends HttpKernel
 {
@@ -19,7 +22,6 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\TrustProxies::class,
-        \App\Http\Middleware\GenerateToken::class,
     ];
 
     /**
@@ -60,8 +62,7 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'token.generate' => Middleware\GenerateToken::class,
-        'jwt.auth' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
-        'admin.permission' => Middleware\PermissionAdmin::class
+        'permission.admin' => PermissionAdmin::class,
+        'permission.custom' => PermissionCustomer::class,
     ];
 }

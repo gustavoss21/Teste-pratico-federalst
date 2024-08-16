@@ -6,13 +6,23 @@ use Illuminate\Http\Request;
 use App\Veiculo;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class UserDefaultController extends Controller
 {
+    public function __construct() {
+        $this->middleware('permission.custom');
+    }
     public function index()
     {
-        $user_id = Auth::id();
-        $vehicle_list = User::find($user_id)->veiculo;
-        return $vehicle_list;
+        return view('home');
+    }
+
+    public function getVehicles(){
+        $vehicle = Cache::remember('user'.Auth::id().'vehicle',60, function () {
+            return  User::find(Auth::id())->veiculo;
+        });
+
+        return $vehicle;
     }
 }

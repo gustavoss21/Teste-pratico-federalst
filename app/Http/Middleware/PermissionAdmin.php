@@ -20,8 +20,8 @@ class PermissionAdmin
     {
         
         if(Auth::user()->role != User::ROLE_ADMIN) {
-
-            return redirect( '/home');
+            abort(403, 'Unauthorized action.');
+            return redirect()->route('home',['message'=>'Usuario não tem as credencias para acessar a area administraiva']);
         }
 
         return $next($request);

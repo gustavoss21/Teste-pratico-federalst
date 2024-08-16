@@ -60,6 +60,12 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    //  DEVE SER COMENTADO EM PRODUÇAO
+    'to' => [
+        'address' => 'gtplay.gss25@gmail.com',
+        'name' => 'gustavo'
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | E-Mail Encryption Protocol

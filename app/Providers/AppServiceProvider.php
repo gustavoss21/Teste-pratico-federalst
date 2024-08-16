@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Faker\Generator as FakerGenerator;
 use Faker\Factory as FakerFactory;
+use App\User;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
         \Validator::extend('cpf',function($attribute,$value,$parameters,$validator){
             return (new Cpf())->isValid($value);
         });
+
+        User::observe(UserObserver::class);
     }
 
     /**

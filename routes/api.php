@@ -13,20 +13,3 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::prefix('v1')->middleware('jwt.auth')->group(function(){
-    // Route::get('/veiculo','UserDefaultController@index');
-    Route::post('/refresh','Auth\LoginController@refresh');
-    Route::post('/logout','Auth\LoginController@logout');
-});
-
-
-Route::prefix('admin')->middleware('admin.permission')->group(function(){
-    Route::get('/veiculo','AdminController@index');
-});
-
-Route::middleware('generate_token','auth:api')->get('/user', function (Request $request) {
-    // return $request->user();
-});
-
-
-Route::post('/login','Auth\LoginController@login');

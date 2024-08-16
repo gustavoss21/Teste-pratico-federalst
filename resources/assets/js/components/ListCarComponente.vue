@@ -1,47 +1,35 @@
 <template>
-    <div class="container">
-        
+    <div class="content" style="margin-left:5%;">
+     <div style="display: flex;    align-items: center;">
+        <h1 style="margin-right: 5px;">sua lista de carro</h1>
+        <a :href="url_origin +'/admin/home/veiculo/adicionar'">
+            <span style="font-weight: 600;color: #e4e403;" class="material-symbols-outlined">add_box</span>
+        </a>
+     </div>   
+    <h1 v-bind="message_atribute" id="message">{{ message }}</h1>
+
+    <div>
+        <car-component></car-component>
     </div>
+    </div>
+    
 </template>
 
 <script>
     export default {
         data(){
             return {
-                urlBasy:window.location.origin
-            }
+                url_origin:window.location.origin,
+                'message_atribute':{'style':{'display':'none','color':'red'}},
+                'message':'',
+                }
+            
         },
         methods:{
-            get_list_car(){
-                let href = this.urlBasy + '/api/veiculo'
-                console.log([])
-                axios.get(href,{
-                    headers: {
-                        'Authorization': 'Bearer ' + this.getCookie('token')
-                    }}
-                )
-                
-                //     .then(
-                //         response => {
-                //             console.log(response)
-                //         }
-                //     )
-                //     .catch(error => {
-                //             this.message_alert('danger','hover um erro inesperado')
-                //             console.log(error)
-                //         }
-                //     )
-            },
-
-            getCookie(name) {
-                const value = `; ${document.cookie}`;
-                const parts = value.split(`; ${name}=`);
-                if (parts.length === 2) return parts.pop().split(';').shift();
-            }
+          
         },
-        
+      
         mounted() {
-            this.get_list_car()
         }
     }
 </script>

@@ -24,9 +24,6 @@ Vue.component('list-car-component', ListCarComponente);
 Vue.component('car-component', CarComponente);
 Vue.component('login-component', LoginComponente);
 
-
-console.log('111111111111111')
-
 const app = new Vue({
     el: '#app'
 });

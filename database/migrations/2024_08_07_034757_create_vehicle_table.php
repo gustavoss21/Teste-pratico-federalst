@@ -17,13 +17,14 @@ class CreateVehicleTable extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->char('plate',7)->unique();
-            $table->char('renew',30);
+            $table->char('renew',30)->nullable();
             $table->char('model',50);
             $table->char('brand',50);
             $table->year('year');
             $table->year('last_maintenance')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->softDeletes();
         });
     }
 
